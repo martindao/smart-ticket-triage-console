@@ -8,9 +8,9 @@ Smart Ticket Triage Console is a React helpdesk UI remake built to feel close to
 ![Tailwind](https://img.shields.io/badge/Tailwind-4-cyan?logo=tailwindcss)
 ![Tests](https://img.shields.io/badge/Tests-18_passing-green?logo=vitest)
 
-## What the remake is aiming for
+## What the remake delivers
 
-The latest UI pass pushes the app closer to the feel of a real support console:
+The current UI focuses on the parts of a support console that matter during live triage:
 
 - a dense ticket queue with quick triage tabs
 - a split-panel workflow where queue and detail stay visible together
@@ -19,13 +19,11 @@ The latest UI pass pushes the app closer to the feel of a real support console:
 
 ## Screenshots
 
-These image slots are intentionally kept in the README as proof placeholders for the updated helpdesk-style UI.
+Current captures from the live remake are saved under `docs/screenshots/`.
 
 | Dashboard | Queue | Ticket Detail |
 |-----------|-------|---------------|
-| ![Dashboard placeholder](docs/screenshots/dashboard.png) | ![Queue placeholder](docs/screenshots/queue.png) | ![Detail placeholder](docs/screenshots/detail.png) |
-
-> Replace the placeholder image files in `docs/screenshots/` with current captures from the remade UI.
+| ![Dashboard view](docs/screenshots/dashboard.png) | ![Queue view](docs/screenshots/queue.png) | ![Ticket detail view](docs/screenshots/detail.png) |
 
 ## Source inspiration disclosure
 
@@ -34,7 +32,7 @@ This portfolio rebuild is visually and structurally inspired by two open-source 
 - **[Peppermint](https://github.com/Peppermint-Lab/peppermint)** — queue density, left-nav app framing, split layout, practical ticket operations
 - **[Frappe Helpdesk](https://github.com/frappe/helpdesk)** — service-desk tone, dashboard card summaries, SLA/status visibility, support context in the detail view
 
-This is still an original React implementation for portfolio use. The goal is to study real support product patterns and recreate the feel of that workflow in a smaller standalone app. No source code was copied from those projects.
+This is an original React implementation built for portfolio review. The goal is to study real support product patterns and recreate that workflow in a smaller standalone app. No source code was copied from those projects.
 
 ## Support relevance
 
