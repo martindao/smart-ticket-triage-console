@@ -6,7 +6,37 @@ Smart Ticket Triage Console is a React helpdesk UI remake built to feel close to
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?logo=typescript)
 ![Vite](https://img.shields.io/badge/Vite-8-purple?logo=vite)
 ![Tailwind](https://img.shields.io/badge/Tailwind-4-cyan?logo=tailwindcss)
-![Tests](https://img.shields.io/badge/Tests-18_passing-green?logo=vitest)
+![Tests](https://img.shields.io/badge/Tests-174_passing-green?logo=vitest)
+
+## Case Study
+
+### The Problem
+
+High-volume support queues need sub-10-second triage. When a ticket lands, the agent needs to know: *Who owns it? How urgent? What's the SLA?* Generic ticket systems hide this in dropdowns and detail pages — every click costs seconds.
+
+### The Approach
+
+Built a dense queue with SLA visibility, escalation context, and keyboard shortcuts for power users:
+
+- **Split-panel layout** — Queue and detail visible together, no context switching
+- **SLA badges with overdue highlighting** — Amber glow on tickets breaching SLA, visible in queue
+- **Queue tabs** — All Tickets, My Tickets, Unassigned, Critical, Overdue — one click to filter
+- **Keyboard shortcuts** — J/K to navigate, E to escalate, R to resolve — no mouse needed
+
+### Key Design Decisions
+
+| Decision | Why |
+|----------|-----|
+| Dense queue (420px panel) | More tickets visible = faster scanning, less scrolling |
+| Inline priority/status badges | Color-coded urgency at a glance, no clicking into tickets |
+| Overdue tab with amber styling | SLA breaches are the most urgent — make them impossible to miss |
+| localStorage persistence | Simulates agent returning to in-progress queue without losing state |
+
+### What This Proves
+
+I understand support triage workflows and build tools that help agents work faster. This isn't a generic CRUD app — it's designed for the specific cognitive load of high-volume ticket triage.
+
+---
 
 ## What the remake delivers
 

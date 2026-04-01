@@ -19,29 +19,49 @@ export function StatsCards({ tickets }: StatsCardsProps) {
       label: 'Open',
       count: openCount,
       icon: Inbox,
-      color: 'bg-blue-50 text-blue-700 border-blue-200',
-      iconBg: 'bg-blue-100',
+      cardStyle: {
+        background: 'var(--surface-800)',
+        borderColor: 'var(--border-default)',
+        color: 'var(--text-200)',
+      },
+      iconBg: 'var(--accent-primary-muted)',
+      iconColor: 'var(--accent-primary)',
     },
     {
       label: 'In Progress',
       count: inProgressCount,
       icon: Loader2,
-      color: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-      iconBg: 'bg-indigo-100',
+      cardStyle: {
+        background: 'var(--surface-800)',
+        borderColor: 'var(--border-default)',
+        color: 'var(--text-200)',
+      },
+      iconBg: 'var(--semantic-info-muted)',
+      iconColor: 'var(--semantic-info)',
     },
     {
       label: 'Resolved',
       count: resolvedCount,
       icon: CheckCircle2,
-      color: 'bg-green-50 text-green-700 border-green-200',
-      iconBg: 'bg-green-100',
+      cardStyle: {
+        background: 'var(--surface-800)',
+        borderColor: 'var(--border-default)',
+        color: 'var(--text-200)',
+      },
+      iconBg: 'var(--semantic-success-muted)',
+      iconColor: 'var(--semantic-success)',
     },
     {
       label: 'Overdue',
       count: overdueCount,
       icon: AlertCircle,
-      color: 'bg-red-50 text-red-700 border-red-200',
-      iconBg: 'bg-red-100',
+      cardStyle: {
+        background: 'var(--accent-secondary-muted)',
+        borderColor: 'var(--accent-secondary)',
+        color: 'var(--accent-secondary)',
+      },
+      iconBg: 'var(--accent-secondary)',
+      iconColor: 'white',
     },
   ];
 
@@ -49,18 +69,36 @@ export function StatsCards({ tickets }: StatsCardsProps) {
     <div className="grid grid-cols-4 gap-4">
       {stats.map((stat) => {
         const Icon = stat.icon;
+        const isOverdue = stat.label === 'Overdue';
         return (
           <div
             key={stat.label}
-            className={`p-4 rounded-xl border ${stat.color} transition-all hover:shadow-sm`}
+            className={`p-4 rounded-xl border stats-card ${isOverdue ? 'stats-card--overdue' : ''}`}
+            style={{
+              background: stat.cardStyle.background,
+              borderColor: stat.cardStyle.borderColor,
+            }}
           >
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm font-medium opacity-80">{stat.label}</p>
-                <p className="text-2xl font-bold mt-1">{stat.count}</p>
+                <p
+                  className="text-sm font-medium"
+                  style={{ color: stat.cardStyle.color }}
+                >
+                  {stat.label}
+                </p>
+                <p
+                  className="text-2xl font-bold mt-1"
+                  style={{ color: 'var(--text-100)' }}
+                >
+                  {stat.count}
+                </p>
               </div>
-              <div className={`w-10 h-10 rounded-lg ${stat.iconBg} flex items-center justify-center`}>
-                <Icon className="w-5 h-5" />
+              <div
+                className="w-10 h-10 rounded-lg flex items-center justify-center"
+                style={{ background: stat.iconBg }}
+              >
+                <Icon className="w-5 h-5" style={{ color: stat.iconColor }} />
               </div>
             </div>
           </div>

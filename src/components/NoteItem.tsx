@@ -15,20 +15,20 @@ export function NoteItem({ note }: NoteItemProps) {
   });
 
   return (
-    <div className="flex gap-3 p-3 rounded-lg bg-gray-50 border border-gray-100">
+    <div className="flex gap-3 p-3 rounded-lg bg-[var(--surface-700)] border border-[var(--border-subtle)]">
       <AgentAvatar agent={note.author} size="sm" />
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
-          <span className="font-medium text-sm text-gray-900">{note.author.name}</span>
-          <span className="text-xs text-gray-500">{formattedDate}</span>
+          <span className="font-medium text-sm text-[var(--text-100)]">{note.author.name}</span>
+          <span className="text-xs text-[var(--text-400)]">{formattedDate}</span>
           {note.isInternal && (
-            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs bg-amber-50 text-amber-700 border border-amber-200">
+            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs bg-[var(--accent-secondary-subtle)] text-[var(--accent-secondary)] border border-[var(--accent-secondary-muted)]">
               <Lock className="w-3 h-3" />
               Internal
             </span>
           )}
         </div>
-        <p className="text-sm text-gray-700 whitespace-pre-wrap">{note.content}</p>
+        <p className="text-sm text-[var(--text-300)] whitespace-pre-wrap">{note.content}</p>
       </div>
     </div>
   );

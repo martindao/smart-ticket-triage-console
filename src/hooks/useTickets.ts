@@ -52,6 +52,9 @@ export function useTickets(currentAgent: Agent) {
   }, []);
 
   const escalateTicket = useCallback((ticketId: string) => {
+    // Calculate the new ticket ID first
+    let newTicketId: string;
+    
     setTickets((prev) => {
       const ticket = prev.find((t) => t.id === ticketId);
       if (!ticket) return prev;
@@ -68,9 +71,11 @@ export function useTickets(currentAgent: Agent) {
         return Number.isNaN(numericPart) ? max : Math.max(max, numericPart);
       }, 0);
 
+      newTicketId = `TKT-${String(latestTicketNumber + 1).padStart(3, '0')}`;
+
       const newTicket: Ticket = {
         ...ticket,
-        id: `TKT-${String(latestTicketNumber + 1).padStart(3, '0')}`,
+        id: newTicketId,
         priority: newPriority,
         status: 'Open',
         assignee: null,
@@ -83,6 +88,14 @@ export function useTickets(currentAgent: Agent) {
 
       return [...prev, newTicket];
     });
+
+    // Select the new escalated ticket after creation
+    // Use a microtask to ensure the state update has propagated
+    setTimeout(() => {
+      if (newTicketId) {
+        setSelectedTicketId(newTicketId);
+      }
+    }, 0);
   }, []);
 
   const resolveTicket = useCallback((ticketId: string, rca: string) => {

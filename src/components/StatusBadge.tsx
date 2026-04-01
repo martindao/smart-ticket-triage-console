@@ -5,10 +5,10 @@ interface StatusBadgeProps {
 }
 
 const statusStyles: Record<Status, string> = {
-  Open: 'bg-gray-100 text-gray-700 border-gray-200',
-  'In Progress': 'bg-blue-50 text-blue-700 border-blue-200',
-  Resolved: 'bg-green-50 text-green-700 border-green-200',
-  Closed: 'bg-slate-100 text-slate-600 border-slate-200',
+  Open: 'bg-[var(--surface-600)] text-[var(--text-300)] border-[var(--border-default)]',
+  'In Progress': 'bg-[var(--accent-primary-subtle)] text-[var(--accent-primary-text)] border-[var(--accent-primary-muted)]',
+  Resolved: 'bg-[var(--semantic-success-muted)] text-[#4ade80] border-[rgba(34,197,94,0.25)]',
+  Closed: 'bg-[var(--surface-700)] text-[var(--text-400)] border-[var(--border-subtle)]',
 };
 
 export function StatusBadge({ status }: StatusBadgeProps) {

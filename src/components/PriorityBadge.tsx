@@ -5,10 +5,10 @@ interface PriorityBadgeProps {
 }
 
 const priorityStyles: Record<Priority, string> = {
-  Low: 'bg-slate-100 text-slate-700 border-slate-200',
-  Medium: 'bg-blue-50 text-blue-700 border-blue-200',
-  High: 'bg-orange-50 text-orange-700 border-orange-200',
-  Critical: 'bg-red-50 text-red-700 border-red-200',
+  Low: 'bg-[var(--surface-600)] text-[var(--text-300)] border-[var(--border-default)]',
+  Medium: 'bg-[var(--semantic-info-muted)] text-[#60a5fa] border-[rgba(59,130,246,0.25)]',
+  High: 'bg-[var(--accent-secondary-subtle)] text-[var(--accent-secondary)] border-[var(--accent-secondary-muted)]',
+  Critical: 'bg-[var(--semantic-critical-muted)] text-[var(--semantic-critical-text)] border-[rgba(239,68,68,0.25)]',
 };
 
 export function PriorityBadge({ priority }: PriorityBadgeProps) {

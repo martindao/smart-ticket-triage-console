@@ -15,7 +15,7 @@ export function AgentAvatar({ agent, size = 'md' }: AgentAvatarProps) {
   if (!agent) {
     return (
       <div
-        className={`${sizeClasses[size]} rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400`}
+        className={`${sizeClasses[size]} rounded-full bg-[var(--surface-600)] border border-[var(--border-default)] flex items-center justify-center text-[var(--text-400)]`}
         title="Unassigned"
       >
         ?
@@ -27,7 +27,7 @@ export function AgentAvatar({ agent, size = 'md' }: AgentAvatarProps) {
 
   return (
     <div
-      className={`${sizeClasses[size]} rounded-full bg-blue-100 border border-blue-200 flex items-center justify-center text-blue-700 font-medium`}
+      className={`${sizeClasses[size]} rounded-full bg-[var(--accent-primary-subtle)] border border-[var(--accent-primary-muted)] flex items-center justify-center text-[var(--accent-primary-text)] font-medium`}
       title={`${agent.name} (${agent.role})`}
     >
       {initials}

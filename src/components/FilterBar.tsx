@@ -30,8 +30,26 @@ export function FilterBar({
 }: FilterBarProps) {
   const hasActiveFilters = activeFiltersCount > 0 || searchQuery;
 
+  const inputStyle: React.CSSProperties = {
+    background: 'var(--surface-700)',
+    border: '1px solid var(--border-default)',
+    color: 'var(--text-200)',
+    borderRadius: '0.5rem',
+  };
+
+  const selectStyle: React.CSSProperties = {
+    ...inputStyle,
+    cursor: 'pointer',
+  };
+
   return (
-    <div className="p-4 bg-white border-b border-gray-200">
+    <div
+      className="p-4"
+      style={{
+        background: 'var(--surface-800)',
+        borderBottom: '1px solid var(--border-default)',
+      }}
+    >
       <div className="flex flex-wrap items-center gap-3">
         {/* Search */}
         <div className="flex-1 min-w-[200px]">
@@ -40,7 +58,16 @@ export function FilterBar({
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Search tickets..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+            className="w-full px-3 py-2 text-sm focus:outline-none"
+            style={inputStyle}
+            onFocus={(e) => {
+              e.target.style.borderColor = 'var(--accent-primary)';
+              e.target.style.boxShadow = 'var(--focus-ring)';
+            }}
+            onBlur={(e) => {
+              e.target.style.borderColor = 'var(--border-default)';
+              e.target.style.boxShadow = 'none';
+            }}
           />
         </div>
 
@@ -48,7 +75,14 @@ export function FilterBar({
         <select
           value={priorityFilter}
           onChange={(e) => onPriorityChange(e.target.value as Priority | 'All')}
-          className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm bg-white"
+          className="px-3 py-2 text-sm focus:outline-none"
+          style={selectStyle}
+          onFocus={(e) => {
+            e.target.style.borderColor = 'var(--accent-primary)';
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = 'var(--border-default)';
+          }}
         >
           <option value="All">All Priorities</option>
           <option value="Critical">Critical</option>
@@ -61,7 +95,14 @@ export function FilterBar({
         <select
           value={statusFilter}
           onChange={(e) => onStatusChange(e.target.value as Status | 'All')}
-          className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm bg-white"
+          className="px-3 py-2 text-sm focus:outline-none"
+          style={selectStyle}
+          onFocus={(e) => {
+            e.target.style.borderColor = 'var(--accent-primary)';
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = 'var(--border-default)';
+          }}
         >
           <option value="All">All Statuses</option>
           <option value="Open">Open</option>
@@ -74,7 +115,14 @@ export function FilterBar({
         <select
           value={assigneeFilter}
           onChange={(e) => onAssigneeChange(e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm bg-white"
+          className="px-3 py-2 text-sm focus:outline-none"
+          style={selectStyle}
+          onFocus={(e) => {
+            e.target.style.borderColor = 'var(--accent-primary)';
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = 'var(--border-default)';
+          }}
         >
           <option value="All">All Assignees</option>
           <option value="Unassigned">Unassigned</option>
@@ -85,12 +133,13 @@ export function FilterBar({
           ))}
         </select>
 
-        {/* Clear Filters */}
-        {hasActiveFilters && (
-          <button
-            onClick={onClearFilters}
-            className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900"
-          >
+      {/* Clear Filters */}
+      {hasActiveFilters && (
+        <button
+          onClick={onClearFilters}
+          className="filter-btn flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-lg transition-colors"
+          style={{ color: 'var(--text-300)' }}
+        >
             <X className="w-4 h-4" />
             Clear
           </button>
@@ -100,35 +149,47 @@ export function FilterBar({
       {/* Active Filter Chips */}
       {hasActiveFilters && (
         <div className="flex flex-wrap items-center gap-2 mt-3">
-          <Filter className="w-4 h-4 text-gray-400" />
+          <Filter className="w-4 h-4" style={{ color: 'var(--text-400)' }} />
           {searchQuery && (
-            <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-blue-50 text-blue-700 rounded border border-blue-200">
+            <span className="filter-chip">
               Search: "{searchQuery}"
-              <button onClick={() => onSearchChange('')} className="hover:text-blue-900">
+              <button
+                onClick={() => onSearchChange('')}
+                className="hover:opacity-70"
+              >
                 <X className="w-3 h-3" />
               </button>
             </span>
           )}
           {priorityFilter !== 'All' && (
-            <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-purple-50 text-purple-700 rounded border border-purple-200">
+            <span className="filter-chip">
               Priority: {priorityFilter}
-              <button onClick={() => onPriorityChange('All')} className="hover:text-purple-900">
+              <button
+                onClick={() => onPriorityChange('All')}
+                className="hover:opacity-70"
+              >
                 <X className="w-3 h-3" />
               </button>
             </span>
           )}
           {statusFilter !== 'All' && (
-            <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-green-50 text-green-700 rounded border border-green-200">
+            <span className="filter-chip">
               Status: {statusFilter}
-              <button onClick={() => onStatusChange('All')} className="hover:text-green-900">
+              <button
+                onClick={() => onStatusChange('All')}
+                className="hover:opacity-70"
+              >
                 <X className="w-3 h-3" />
               </button>
             </span>
           )}
           {assigneeFilter !== 'All' && (
-            <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-orange-50 text-orange-700 rounded border border-orange-200">
+            <span className="filter-chip">
               Assignee: {assigneeFilter}
-              <button onClick={() => onAssigneeChange('All')} className="hover:text-orange-900">
+              <button
+                onClick={() => onAssigneeChange('All')}
+                className="hover:opacity-70"
+              >
                 <X className="w-3 h-3" />
               </button>
             </span>

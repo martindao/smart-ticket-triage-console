@@ -35,29 +35,83 @@ export function QueueTabs({ activeTab, onTabChange, tickets, currentAgentId }: Q
     },
   ];
 
+  const getTabStyle = (tabId: string, isActive: boolean): React.CSSProperties => {
+    const isOverdue = tabId === 'overdue';
+
+    if (isActive) {
+      return {
+        background: isOverdue
+          ? 'var(--accent-secondary-muted)'
+          : 'var(--accent-primary-muted)',
+        color: isOverdue
+          ? 'var(--accent-secondary)'
+          : 'var(--accent-primary-text)',
+        borderColor: isOverdue
+          ? 'var(--accent-secondary)'
+          : 'var(--accent-primary)',
+      };
+    }
+
+    return {
+      background: 'transparent',
+      color: 'var(--text-300)',
+    };
+  };
+
+  const getCountStyle = (tabId: string, isActive: boolean): React.CSSProperties => {
+    const isOverdue = tabId === 'overdue';
+    const isCritical = tabId === 'critical';
+
+    if (isActive) {
+      return {
+        background: isOverdue
+          ? 'var(--accent-secondary)'
+          : 'var(--accent-primary)',
+        color: 'white',
+      };
+    }
+
+    if (isOverdue) {
+      return {
+        background: 'var(--accent-secondary-muted)',
+        color: 'var(--accent-secondary)',
+      };
+    }
+
+    if (isCritical) {
+      return {
+        background: 'var(--semantic-critical-muted)',
+        color: 'var(--semantic-critical)',
+      };
+    }
+
+    return {
+      background: 'var(--surface-700)',
+      color: 'var(--text-300)',
+    };
+  };
+
   return (
-    <div className="flex items-center gap-1 p-2 bg-gray-50 border-b border-gray-200 overflow-x-auto">
+    <div
+      className="flex items-center gap-1 p-2 overflow-x-auto"
+      style={{
+        background: 'var(--surface-800)',
+        borderBottom: '1px solid var(--border-default)',
+      }}
+    >
       {tabs.map((tab) => (
         <button
           key={tab.id}
           onClick={() => onTabChange(tab.id)}
-          className={`
-            flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors
-            ${activeTab === tab.id
-              ? 'bg-white text-blue-700 shadow-sm border border-gray-200'
-              : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-            }
-          `}
+          className={`queue-tab flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-all duration-200 border border-transparent ${
+            tab.id === 'critical' ? 'queue-tab-critical' : ''
+          } ${tab.id === 'overdue' ? 'queue-tab-overdue' : ''} ${activeTab === tab.id ? 'active' : ''}`}
+          style={getTabStyle(tab.id, activeTab === tab.id)}
         >
           {tab.label}
           <span
-            className={`
-              inline-flex items-center justify-center min-w-[20px] px-1.5 py-0.5 text-xs rounded-full
-              ${activeTab === tab.id
-                ? 'bg-blue-100 text-blue-700'
-                : 'bg-gray-200 text-gray-600'
-              }
-            `}
+            className="inline-flex items-center justify-center min-w-[20px] px-1.5 py-0.5 text-xs font-semibold rounded-full"
+            style={getCountStyle(tab.id, activeTab === tab.id)}
           >
             {tab.count}
           </span>

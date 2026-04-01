@@ -245,86 +245,102 @@ function App() {
   ]);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen flex" style={{ background: 'var(--canvas)' }}>
       {/* Sidebar Navigation */}
       <Sidebar activeView={activeView} onViewChange={setActiveView} />
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Header */}
-        <header className="bg-white border-b border-gray-200 px-6 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+{/* Header */}
+<header className="px-4 md:px-6 py-3 border-b" style={{ background: 'var(--surface-900)', borderColor: 'var(--border-default)' }}>
+<div className="flex items-center justify-between">
+<div className="flex items-center gap-2 md:gap-4">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center">
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: 'var(--accent-primary)' }}>
                   <TicketCheck className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-lg font-semibold text-gray-900">TicketTriage</h1>
+                  <h1 className="text-lg font-semibold" style={{ color: 'var(--text-100)' }}>TicketTriage</h1>
                 </div>
               </div>
-              <div className="h-6 w-px bg-gray-200" />
-              <div className="flex items-center gap-2 text-sm text-gray-600">
+              <div className="h-6 w-px" style={{ background: 'var(--border-default)' }} />
+              <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--text-300)' }}>
                 <LayoutDashboard className="w-4 h-4" />
                 <span>{tickets.length} tickets</span>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Global search..."
-                  className="pl-9 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 w-64"
-                />
-              </div>
-              <button className="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg">
-                <Bell className="w-5 h-5" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
-              </button>
-              <button
-                onClick={() => setShowShortcutHelp(true)}
-                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
-              >
-                <Keyboard className="w-4 h-4" />
-                Shortcuts
-              </button>
-              <button
-                onClick={clearSavedData}
-                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-red-700 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100"
-              >
-                <RotateCcw className="w-4 h-4" />
-                Reset
-              </button>
-              <div className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-lg">
-                <AgentAvatar agent={CURRENT_AGENT} size="sm" />
-                <span className="text-sm font-medium text-gray-700">{CURRENT_AGENT.name}</span>
-              </div>
-            </div>
+<div className="flex items-center gap-2 md:gap-3">
+<div className="relative hidden sm:block">
+<Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-400)' }} />
+<input
+  type="text"
+  placeholder="Global search..."
+  className="hidden lg:block pl-9 pr-4 py-2 text-sm rounded-lg w-64 focus:outline-none"
+  style={{
+    background: 'var(--surface-800)',
+    border: '1px solid var(--border-default)',
+    color: 'var(--text-200)'
+  }}
+/>
+</div>
+<button className="relative p-2 rounded-lg transition-colors" style={{ color: 'var(--text-300)' }}>
+<Bell className="w-5 h-5" />
+<span className="absolute top-1 right-1 w-2 h-2 rounded-full" style={{ background: 'var(--semantic-critical)' }} />
+</button>
+<button
+onClick={() => setShowShortcutHelp(true)}
+className="hidden md:flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-colors"
+style={{
+  background: 'var(--surface-700)',
+  border: '1px solid var(--border-default)',
+  color: 'var(--text-200)'
+}}
+>
+<Keyboard className="w-4 h-4" />
+Shortcuts
+</button>
+<button
+onClick={clearSavedData}
+className="hidden sm:flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-colors"
+style={{
+  background: 'var(--semantic-critical-muted)',
+  border: '1px solid var(--semantic-critical)',
+  color: 'var(--semantic-critical-text)'
+}}
+>
+<RotateCcw className="w-4 h-4" />
+Reset
+</button>
+<div className="hidden md:flex items-center gap-2 px-3 py-2 rounded-lg" style={{ background: 'var(--surface-700)' }}>
+<AgentAvatar agent={CURRENT_AGENT} size="sm" />
+<span className="text-sm font-medium" style={{ color: 'var(--text-200)' }}>{CURRENT_AGENT.name}</span>
+</div>
+</div>
           </div>
         </header>
 
         {/* Dashboard View */}
         {activeView === 'dashboard' && (
-          <div className="flex-1 overflow-y-auto p-6">
+          <div className="flex-1 overflow-y-auto p-6" style={{ background: 'var(--surface-900)' }}>
             <div className="max-w-7xl mx-auto space-y-6">
               {/* Stats Cards */}
               <StatsCards tickets={tickets} />
 
-              {/* Main Content Grid */}
-              <div className="grid grid-cols-3 gap-6">
-                {/* Ticket Queue Preview */}
-                <div className="col-span-2 space-y-4">
+{/* Main Content Grid */}
+<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+{/* Ticket Queue Preview */}
+<div className="col-span-1 lg:col-span-2 space-y-4">
                   <div className="flex items-center justify-between">
-                    <h2 className="text-lg font-semibold text-gray-900">Unassigned Tickets</h2>
+                    <h2 className="text-lg font-semibold" style={{ color: 'var(--text-100)' }}>Unassigned Tickets</h2>
                     <button
                       onClick={() => setActiveView('tickets')}
-                      className="text-sm text-indigo-600 hover:text-indigo-700 font-medium"
+                      className="text-sm font-medium transition-colors"
+                      style={{ color: 'var(--accent-primary)' }}
                     >
                       View All →
                     </button>
                   </div>
-                  <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                  <div className="rounded-lg overflow-hidden" style={{ background: 'var(--surface-800)', border: '1px solid var(--border-default)' }}>
                     {tickets
                       .filter((t) => t.assignee === null)
                       .slice(0, 5)
@@ -341,7 +357,7 @@ function App() {
                         />
                       ))}
                     {tickets.filter((t) => t.assignee === null).length === 0 && (
-                      <div className="p-8 text-center text-gray-400">
+                      <div className="p-8 text-center" style={{ color: 'var(--text-400)' }}>
                         <p>No unassigned tickets</p>
                       </div>
                     )}
@@ -350,7 +366,7 @@ function App() {
 
                 {/* Activity Feed */}
                 <div className="space-y-4">
-                  <h2 className="text-lg font-semibold text-gray-900">Recent Activity</h2>
+                  <h2 className="text-lg font-semibold" style={{ color: 'var(--text-100)' }}>Recent Activity</h2>
                   <ActivityFeed activities={activities} />
                 </div>
               </div>
@@ -358,14 +374,14 @@ function App() {
           </div>
         )}
 
-        {/* Tickets View */}
-        {activeView === 'tickets' && (
-          <div className="flex-1 flex overflow-hidden">
-            {/* Left Panel - Queue */}
-            <div className="w-[420px] flex flex-col bg-white border-r border-gray-200">
-              <div className="p-3 border-b border-gray-200 flex items-center justify-between">
-                <h2 className="font-semibold text-gray-900">Tickets</h2>
-                <button className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700">
+{/* Tickets View */}
+{activeView === 'tickets' && (
+<div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+  {/* Left Panel - Queue */}
+  <div className="w-full lg:w-[420px] flex flex-col border-b lg:border-b-0 lg:border-r" style={{ background: 'var(--surface-800)', borderColor: 'var(--border-default)' }}>
+              <div className="p-3 border-b flex items-center justify-between" style={{ borderColor: 'var(--border-default)' }}>
+                <h2 className="font-semibold" style={{ color: 'var(--text-100)' }}>Tickets</h2>
+                <button className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white rounded-lg transition-colors" style={{ background: 'var(--accent-primary)' }}>
                   <Plus className="w-4 h-4" />
                   New Ticket
                 </button>
@@ -391,11 +407,12 @@ function App() {
               />
               <div className="flex-1 overflow-y-auto">
                 {filteredTickets.length === 0 ? (
-                  <div className="text-center py-12 text-gray-400">
+                  <div className="text-center py-12" style={{ color: 'var(--text-400)' }}>
                     <p>No tickets match your filters</p>
                     <button
                       onClick={clearFilters}
-                      className="mt-2 text-indigo-600 hover:text-indigo-700 text-sm"
+                      className="mt-2 text-sm"
+                      style={{ color: 'var(--accent-primary)' }}
                     >
                       Clear filters
                     </button>
@@ -416,7 +433,7 @@ function App() {
             </div>
 
             {/* Right Panel - Detail */}
-            <div className="flex-1 bg-gray-50 overflow-hidden">
+            <div className="flex-1 overflow-hidden" style={{ background: 'var(--surface-900)' }}>
               <TicketDetail
                 ticket={selectedTicket}
                 agents={agents}
@@ -435,36 +452,55 @@ function App() {
 
       {/* Keyboard Shortcuts Modal */}
       {showShortcutHelp && (
-        <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-white rounded-xl shadow-xl border border-gray-200">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">Keyboard Shortcuts</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0, 0, 0, 0.7)' }}>
+          <div className="shortcuts-modal w-full rounded-xl shadow-xl" style={{ background: 'var(--surface-800)', border: '1px solid var(--border-default)' }}>
+            <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: 'var(--border-default)' }}>
+              <h2 className="text-lg font-semibold" style={{ color: 'var(--text-100)' }}>Keyboard Shortcuts</h2>
               <button
                 onClick={() => setShowShortcutHelp(false)}
-                className="p-1 text-gray-500 hover:text-gray-700"
+                className="p-1 rounded transition-colors"
+                style={{ color: 'var(--text-400)' }}
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <div className="p-5 space-y-2 text-sm text-gray-700">
-              <p>
-                <kbd className="font-mono bg-gray-100 px-1.5 py-0.5 rounded">j</kbd> Next ticket
-              </p>
-              <p>
-                <kbd className="font-mono bg-gray-100 px-1.5 py-0.5 rounded">k</kbd> Previous ticket
-              </p>
-              <p>
-                <kbd className="font-mono bg-gray-100 px-1.5 py-0.5 rounded">a</kbd> Assign selected ticket
-              </p>
-              <p>
-                <kbd className="font-mono bg-gray-100 px-1.5 py-0.5 rounded">e</kbd> Escalate selected ticket
-              </p>
-              <p>
-                <kbd className="font-mono bg-gray-100 px-1.5 py-0.5 rounded">r</kbd> Resolve selected in-progress ticket
-              </p>
-              <p>
-                <kbd className="font-mono bg-gray-100 px-1.5 py-0.5 rounded">Esc</kbd> Close details/help
-              </p>
+            <div className="p-5">
+              {/* Navigation Group */}
+              <div className="shortcuts-group">
+                <div className="shortcuts-group-title">Navigation</div>
+                <div className="shortcut-row">
+                  <span className="shortcut-desc">Next ticket</span>
+                  <kbd className="shortcut-key">j</kbd>
+                </div>
+                <div className="shortcut-row">
+                  <span className="shortcut-desc">Previous ticket</span>
+                  <kbd className="shortcut-key">k</kbd>
+                </div>
+              </div>
+              {/* Actions Group */}
+              <div className="shortcuts-group">
+                <div className="shortcuts-group-title">Actions</div>
+                <div className="shortcut-row">
+                  <span className="shortcut-desc">Assign selected ticket</span>
+                  <kbd className="shortcut-key">a</kbd>
+                </div>
+                <div className="shortcut-row">
+                  <span className="shortcut-desc">Escalate selected ticket</span>
+                  <kbd className="shortcut-key">e</kbd>
+                </div>
+                <div className="shortcut-row">
+                  <span className="shortcut-desc">Resolve in-progress ticket</span>
+                  <kbd className="shortcut-key">r</kbd>
+                </div>
+              </div>
+              {/* General Group */}
+              <div className="shortcuts-group">
+                <div className="shortcuts-group-title">General</div>
+                <div className="shortcut-row">
+                  <span className="shortcut-desc">Close details / help</span>
+                  <kbd className="shortcut-key">Esc</kbd>
+                </div>
+              </div>
             </div>
           </div>
         </div>

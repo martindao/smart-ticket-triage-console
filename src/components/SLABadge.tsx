@@ -26,9 +26,9 @@ export function SLABadge({ deadline }: SLABadgeProps) {
   }
 
   const statusStyles = {
-    overdue: 'bg-red-50 text-red-700 border-red-200 animate-pulse',
-    warning: 'bg-orange-50 text-orange-700 border-orange-200',
-    ok: 'bg-green-50 text-green-700 border-green-200',
+    overdue: 'sla-badge-overdue bg-[var(--accent-secondary)] text-[var(--surface-950)] border-[var(--accent-secondary)] font-semibold',
+    warning: 'bg-[var(--accent-secondary-subtle)] text-[var(--accent-secondary)] border-[var(--accent-secondary-muted)]',
+    ok: 'bg-[var(--semantic-success-muted)] text-[#4ade80] border-[rgba(34,197,94,0.25)]',
   };
 
   return (

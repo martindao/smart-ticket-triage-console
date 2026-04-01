@@ -16,8 +16,9 @@ import {
   MessageSquare,
   Clock,
   Tag,
-  AlertCircle,
   FileText,
+  AlertTriangle,
+  Activity,
 } from 'lucide-react';
 
 interface TicketDetailProps {
@@ -51,10 +52,19 @@ export function TicketDetail({
 
   if (!ticket) {
     return (
-      <div className="h-full flex items-center justify-center text-gray-400">
-        <div className="text-center">
-          <MessageSquare className="w-12 h-12 mx-auto mb-3 opacity-50" />
-          <p>Select a ticket to view details</p>
+      <div className="h-full flex items-center justify-center empty-ticket-detail">
+        <div className="text-center max-w-xs">
+          <div className="empty-ticket-detail-icon w-16 h-16 mx-auto mb-4 rounded-xl flex items-center justify-center">
+            <MessageSquare className="w-8 h-8 text-[var(--text-400)]" />
+          </div>
+          <p className="text-sm font-medium text-[var(--text-300)] mb-1">No ticket selected</p>
+          <p className="text-xs text-[var(--text-500)]">Select a ticket from the queue to view details</p>
+          <div className="mt-4 flex items-center justify-center gap-2 text-[10px] text-[var(--text-500)]">
+            <kbd className="px-1.5 py-0.5 rounded bg-[var(--surface-700)] font-mono">j</kbd>
+            <span>/</span>
+            <kbd className="px-1.5 py-0.5 rounded bg-[var(--surface-700)] font-mono">k</kbd>
+            <span>to navigate</span>
+          </div>
         </div>
       </div>
     );
@@ -97,161 +107,219 @@ export function TicketDetail({
   const canClose = ticket.status === 'Resolved' || ticket.status === 'In Progress';
 
   return (
-    <div className="h-full flex flex-col bg-white">
+    <div className="h-full flex flex-col" style={{ background: 'var(--surface-900)' }}>
       {/* Header */}
-      <div className="p-6 border-b border-gray-200">
-        <div className="flex items-start justify-between gap-4 mb-4">
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-sm font-mono text-gray-500">{ticket.id}</span>
+      <div className="px-5 py-4" style={{ borderBottom: '1px solid var(--border-subtle)', background: 'var(--surface-800)' }}>
+        {/* Top row: ID + Badges + Actions */}
+        <div className="flex items-start justify-between gap-4 mb-3">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-2 flex-wrap">
+              <span className="text-xs font-mono tracking-wide text-[var(--text-500)]">{ticket.id}</span>
               <PriorityBadge priority={ticket.priority} />
               <StatusBadge status={ticket.status} />
               {ticket.escalatedFrom && (
                 <button
                   onClick={() => onSelectTicket(ticket.escalatedFrom!)}
-                  className="inline-flex items-center gap-1 text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded border border-amber-200 hover:bg-amber-100"
+                  className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded transition-colors"
+                  style={{
+                    background: 'var(--accent-secondary-subtle)',
+                    color: 'var(--accent-secondary)',
+                    border: '1px solid var(--accent-secondary-muted)',
+                  }}
                 >
                   <LinkIcon className="w-3 h-3" />
                   Escalated from {ticket.escalatedFrom}
                 </button>
               )}
             </div>
-            <h2 className="text-xl font-semibold text-gray-900">{ticket.title}</h2>
-          </div>
-          <div className="flex items-center gap-2">
-            {canAssign && (
-              <div className="relative group">
-                <button className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
-                  <User className="w-4 h-4" />
-                  Assign
-                </button>
-                <div className="absolute right-0 top-full mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-                  {agents.map((agent) => (
-                    <button
-                      key={agent.id}
-                      onClick={() => onAssign(ticket.id, agent.id)}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-gray-50 first:rounded-t-lg last:rounded-b-lg"
-                    >
-                      <AgentAvatar agent={agent} size="sm" />
-                      <span>{agent.name}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-            {canEscalate && (
-              <button
-                onClick={() => onEscalate(ticket.id)}
-                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-orange-700 bg-orange-50 border border-orange-200 rounded-lg hover:bg-orange-100"
-              >
-                <ArrowUpRight className="w-4 h-4" />
-                Escalate
-              </button>
-            )}
-            {canResolve && (
-              <button
-                onClick={() => setShowRcaInput(true)}
-                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-green-700 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100"
-              >
-                <CheckCircle className="w-4 h-4" />
-                Resolve
-              </button>
-            )}
-            {canClose && (
-              <button
-                onClick={() => onClose(ticket.id)}
-                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
-              >
-                <XCircle className="w-4 h-4" />
-                Close
-              </button>
-            )}
+            <h2 className="text-lg font-semibold text-[var(--text-100)] leading-snug">{ticket.title}</h2>
           </div>
         </div>
 
-        {/* Meta info */}
-        <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
-          <div className="flex items-center gap-1">
-            <Clock className="w-4 h-4" />
-            <span>Created {createdDate}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <AlertCircle className="w-4 h-4" />
-            <span>SLA: {slaDate}</span>
-            <SLABadge deadline={ticket.slaDeadline} />
-          </div>
-          {ticket.assignee && (
-            <div className="flex items-center gap-1">
-              <User className="w-4 h-4" />
-              <span>Assigned to {ticket.assignee.name}</span>
+        {/* Action buttons - workflow-first layout */}
+        <div className="flex items-center gap-2 flex-wrap">
+          {canAssign && (
+            <div className="relative group">
+              <button
+                className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-md transition-colors"
+                style={{
+                  background: 'var(--surface-700)',
+                  color: 'var(--text-200)',
+                  border: '1px solid var(--border-default)',
+                }}
+              >
+                <User className="w-3.5 h-3.5" />
+                Assign
+              </button>
+              <div
+                className="absolute left-0 top-full mt-1 w-44 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-20"
+                style={{
+                  background: 'var(--surface-700)',
+                  border: '1px solid var(--border-default)',
+                }}
+              >
+                {agents.map((agent) => (
+        <button
+          key={agent.id}
+          onClick={() => onAssign(ticket.id, agent.id)}
+          className="agent-dropdown-item w-full flex items-center gap-2 px-3 py-2 text-xs text-left transition-colors first:rounded-t-lg last:rounded-b-lg"
+          style={{ color: 'var(--text-200)' }}
+        >
+                    <AgentAvatar agent={agent} size="sm" />
+                    <span>{agent.name}</span>
+                  </button>
+                ))}
+              </div>
             </div>
           )}
+          {canEscalate && (
+            <button
+              onClick={() => onEscalate(ticket.id)}
+              className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-md transition-colors"
+              style={{
+                background: 'var(--accent-secondary-subtle)',
+                color: 'var(--accent-secondary)',
+                border: '1px solid var(--accent-secondary-muted)',
+              }}
+            >
+              <ArrowUpRight className="w-3.5 h-3.5" />
+              Escalate
+            </button>
+          )}
+          {canResolve && (
+            <button
+              onClick={() => setShowRcaInput(true)}
+              className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-md transition-colors"
+              style={{
+                background: 'var(--semantic-success-muted)',
+                color: 'var(--semantic-success)',
+                border: '1px solid rgba(34,197,94,0.25)',
+              }}
+            >
+              <CheckCircle className="w-3.5 h-3.5" />
+              Resolve
+            </button>
+          )}
+          {canClose && (
+            <button
+              onClick={() => onClose(ticket.id)}
+              className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-md transition-colors"
+              style={{
+                background: 'var(--surface-700)',
+                color: 'var(--text-400)',
+                border: '1px solid var(--border-default)',
+              }}
+            >
+              <XCircle className="w-3.5 h-3.5" />
+              Close
+            </button>
+          )}
         </div>
+      </div>
 
-        {/* Tags */}
-        {ticket.tags.length > 0 && (
-          <div className="flex items-center gap-2 mt-3">
-            <Tag className="w-4 h-4 text-gray-400" />
-            {ticket.tags.map((tag) => (
-              <span
-                key={tag}
-                className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded"
-              >
-                {tag}
-              </span>
-            ))}
+      {/* Meta info bar */}
+      <div className="px-5 py-3 flex flex-wrap items-center gap-4 text-xs" style={{ borderBottom: '1px solid var(--border-subtle)', background: 'var(--surface-850)' }}>
+        <div className="flex items-center gap-1.5 text-[var(--text-400)]">
+          <Clock className="w-3.5 h-3.5" />
+          <span>Created {createdDate}</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <AlertTriangle className="w-3.5 h-3.5 text-[var(--accent-secondary)]" />
+          <span className="text-[var(--text-400)]">SLA: {slaDate}</span>
+          <SLABadge deadline={ticket.slaDeadline} />
+        </div>
+        {ticket.assignee && (
+          <div className="flex items-center gap-1.5 text-[var(--text-400)]">
+            <User className="w-3.5 h-3.5" />
+            <span>{ticket.assignee.name}</span>
           </div>
         )}
       </div>
 
+      {/* Tags */}
+      {ticket.tags.length > 0 && (
+        <div className="px-5 py-2 flex items-center gap-2" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+          <Tag className="w-3.5 h-3.5 text-[var(--text-500)]" />
+          {ticket.tags.map((tag) => (
+            <span
+              key={tag}
+              className="text-[11px] text-[var(--text-400)] px-2 py-0.5 rounded"
+              style={{ background: 'var(--surface-700)' }}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+
       {/* Content */}
-      <div className="flex-1 overflow-y-auto p-6">
+      <div className="flex-1 overflow-y-auto px-5 py-4">
         {/* Description */}
-        <div className="mb-6">
-          <h3 className="text-sm font-medium text-gray-900 mb-2 flex items-center gap-2">
-            <FileText className="w-4 h-4" />
+        <div className="mb-5">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-[var(--text-500)] mb-2 flex items-center gap-2">
+            <FileText className="w-3.5 h-3.5" />
             Description
           </h3>
-          <p className="text-gray-700 leading-relaxed">{ticket.description}</p>
+          <p className="text-sm text-[var(--text-300)] leading-relaxed">{ticket.description}</p>
         </div>
 
         {/* RCA */}
         {ticket.rca && (
-          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <div
+            className="mb-5 p-3 rounded-lg"
+            style={{
+              background: 'var(--semantic-success-muted)',
+              border: '1px solid rgba(34,197,94,0.25)',
+            }}
+          >
             <div className="flex items-center justify-between gap-2">
-              <h3 className="text-sm font-medium text-green-900 flex items-center gap-2">
-                <CheckCircle className="w-4 h-4" />
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-[var(--semantic-success)] flex items-center gap-2">
+                <CheckCircle className="w-3.5 h-3.5" />
                 Root Cause Analysis
               </h3>
               <button
                 onClick={() => setShowRcaDetails((prev) => !prev)}
-                className="inline-flex items-center gap-1 text-sm text-green-800 hover:text-green-900"
+                className="inline-flex items-center gap-1 text-[11px] text-[var(--semantic-success)] hover:opacity-80 transition-opacity"
               >
-                {showRcaDetails ? 'Hide Details' : 'View Details'}
-                {showRcaDetails ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                {showRcaDetails ? 'Hide' : 'View'}
+                {showRcaDetails ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
               </button>
             </div>
             {showRcaDetails && (
-              <div className="mt-3 text-sm text-green-800 space-y-2">
-                <p><strong>Summary:</strong> {ticket.rca}</p>
-                <p><strong>Customer Impact:</strong> Service behavior restored and user-facing symptoms no longer reproducible.</p>
-                <p><strong>Follow-up:</strong> Monitoring thresholds and response runbook updated to reduce repeat incidents.</p>
+              <div className="mt-3 text-xs text-[var(--text-200)] space-y-2">
+                <p><strong className="text-[var(--text-100)]">Summary:</strong> {ticket.rca}</p>
+                <p><strong className="text-[var(--text-100)]">Customer Impact:</strong> Service behavior restored and user-facing symptoms no longer reproducible.</p>
+                <p><strong className="text-[var(--text-100)]">Follow-up:</strong> Monitoring thresholds and response runbook updated to reduce repeat incidents.</p>
               </div>
             )}
           </div>
         )}
 
         {ticket.escalatedFrom && (
-          <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
-            <h3 className="text-sm font-medium text-amber-900 mb-2">Escalation Context</h3>
-            <p className="text-sm text-amber-800 mb-3">
-              This ticket was escalated from <strong>{ticket.escalatedFrom}</strong> to increase priority and route deeper technical investigation.
+          <div
+            className="mb-5 p-3 rounded-lg"
+            style={{
+              background: 'var(--accent-secondary-subtle)',
+              border: '1px solid var(--accent-secondary-muted)',
+            }}
+          >
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-[var(--accent-secondary)] mb-2 flex items-center gap-2">
+              <ArrowUpRight className="w-3.5 h-3.5" />
+              Escalation Context
+            </h3>
+            <p className="text-xs text-[var(--text-200)] mb-3">
+              This ticket was escalated from <strong className="text-[var(--accent-secondary)]">{ticket.escalatedFrom}</strong> to increase priority and route deeper technical investigation.
             </p>
             <button
               onClick={() => onSelectTicket(ticket.escalatedFrom!)}
-              className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-amber-900 bg-white border border-amber-300 rounded-lg hover:bg-amber-100"
+              className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-md transition-colors"
+              style={{
+                color: 'var(--accent-secondary)',
+                background: 'var(--surface-700)',
+                border: '1px solid var(--accent-secondary-muted)',
+              }}
             >
-              <LinkIcon className="w-4 h-4" />
+              <LinkIcon className="w-3.5 h-3.5" />
               View Original
             </button>
           </div>
@@ -259,28 +327,49 @@ export function TicketDetail({
 
         {/* RCA Input for Resolve */}
         {showRcaInput && (
-          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <h3 className="text-sm font-medium text-blue-900 mb-2">
+          <div
+            className="mb-5 p-4 rounded-lg"
+            style={{
+              background: 'var(--accent-primary-subtle)',
+              border: '1px solid var(--accent-primary-muted)',
+            }}
+          >
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-[var(--accent-primary-text)] mb-3 flex items-center gap-2">
+              <Activity className="w-3.5 h-3.5" />
               Add Root Cause Analysis
             </h3>
             <textarea
               value={rcaContent}
               onChange={(e) => setRcaContent(e.target.value)}
               placeholder="Describe the root cause and resolution..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+              className="w-full px-3 py-2 text-sm rounded-md focus:outline-none resize-none"
+              style={{
+                background: 'var(--surface-700)',
+                border: '1px solid var(--border-default)',
+                color: 'var(--text-200)',
+              }}
               rows={3}
             />
-            <div className="flex gap-2 mt-2">
+            <div className="flex gap-2 mt-3">
               <button
                 onClick={handleResolve}
                 disabled={!rcaContent.trim()}
-                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 text-xs font-medium rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{
+                  background: 'var(--accent-primary)',
+                  color: 'var(--surface-950)',
+                }}
               >
                 Confirm Resolve
               </button>
               <button
                 onClick={() => setShowRcaInput(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+                className="px-4 py-2 text-xs font-medium rounded-md transition-colors"
+                style={{
+                  background: 'var(--surface-700)',
+                  color: 'var(--text-300)',
+                  border: '1px solid var(--border-default)',
+                }}
               >
                 Cancel
               </button>
@@ -290,13 +379,13 @@ export function TicketDetail({
 
         {/* Notes */}
         <div>
-          <h3 className="text-sm font-medium text-gray-900 mb-3 flex items-center gap-2">
-            <MessageSquare className="w-4 h-4" />
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-[var(--text-500)] mb-3 flex items-center gap-2">
+            <MessageSquare className="w-3.5 h-3.5" />
             Notes ({ticket.notes.length})
           </h3>
 
           {ticket.notes.length > 0 && (
-            <div className="space-y-3 mb-4">
+            <div className="space-y-2 mb-4">
               {ticket.notes.map((note) => (
                 <NoteItem key={note.id} note={note} />
               ))}
@@ -305,28 +394,47 @@ export function TicketDetail({
 
           {/* Add Note */}
           {ticket.status !== 'Closed' && (
-            <div className="border border-gray-200 rounded-lg p-3">
+            <div
+              className="p-3 rounded-lg"
+              style={{
+                background: 'var(--surface-800)',
+                border: '1px solid var(--border-default)',
+              }}
+            >
               <textarea
                 value={noteContent}
                 onChange={(e) => setNoteContent(e.target.value)}
                 placeholder="Add a note..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none text-sm"
+                className="w-full px-3 py-2 text-sm rounded-md focus:outline-none resize-none"
+                style={{
+                  background: 'var(--surface-700)',
+                  border: '1px solid var(--border-default)',
+                  color: 'var(--text-200)',
+                }}
                 rows={3}
               />
               <div className="flex items-center justify-between mt-2">
-                <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
+                <label className="flex items-center gap-2 text-xs text-[var(--text-400)] cursor-pointer">
                   <input
                     type="checkbox"
                     checked={isInternalNote}
                     onChange={(e) => setIsInternalNote(e.target.checked)}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    className="rounded"
+                    style={{
+                      borderColor: 'var(--border-default)',
+                      accentColor: 'var(--accent-primary)',
+                    }}
                   />
                   Internal note
                 </label>
                 <button
                   onClick={handleAddNote}
                   disabled={!noteContent.trim()}
-                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-1.5 text-xs font-medium rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{
+                    background: 'var(--accent-primary)',
+                    color: 'var(--surface-950)',
+                  }}
                 >
                   Add Note
                 </button>

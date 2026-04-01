@@ -93,7 +93,8 @@ describe('TicketDetail', () => {
     expect(screen.getByText('Root Cause Analysis')).toBeInTheDocument();
     expect(screen.queryByText(/Customer Impact:/i)).not.toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: /View Details/i }));
+    // Button was renamed from "View Details" to "View"
+    await user.click(screen.getByRole('button', { name: /View$/i }));
 
     expect(screen.getByText(/Customer Impact:/i)).toBeInTheDocument();
     expect(screen.getByText(/Monitoring thresholds and response runbook updated/i)).toBeInTheDocument();
