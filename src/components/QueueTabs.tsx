@@ -1,4 +1,6 @@
 import type { Ticket } from '../types/ticket';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
 
 interface QueueTabsProps {
   activeTab: string;
@@ -35,60 +37,13 @@ export function QueueTabs({ activeTab, onTabChange, tickets, currentAgentId }: Q
     },
   ];
 
-  const getTabStyle = (tabId: string, isActive: boolean): React.CSSProperties => {
-    const isOverdue = tabId === 'overdue';
-
+  const getBadgeVariant = (tabId: string, isActive: boolean) => {
     if (isActive) {
-      return {
-        background: isOverdue
-          ? 'var(--accent-secondary-muted)'
-          : 'var(--accent-primary-muted)',
-        color: isOverdue
-          ? 'var(--accent-secondary)'
-          : 'var(--accent-primary-text)',
-        borderColor: isOverdue
-          ? 'var(--accent-secondary)'
-          : 'var(--accent-primary)',
-      };
+      return tabId === 'overdue' ? 'destructive' : 'default';
     }
-
-    return {
-      background: 'transparent',
-      color: 'var(--text-300)',
-    };
-  };
-
-  const getCountStyle = (tabId: string, isActive: boolean): React.CSSProperties => {
-    const isOverdue = tabId === 'overdue';
-    const isCritical = tabId === 'critical';
-
-    if (isActive) {
-      return {
-        background: isOverdue
-          ? 'var(--accent-secondary)'
-          : 'var(--accent-primary)',
-        color: 'white',
-      };
-    }
-
-    if (isOverdue) {
-      return {
-        background: 'var(--accent-secondary-muted)',
-        color: 'var(--accent-secondary)',
-      };
-    }
-
-    if (isCritical) {
-      return {
-        background: 'var(--semantic-critical-muted)',
-        color: 'var(--semantic-critical)',
-      };
-    }
-
-    return {
-      background: 'var(--surface-700)',
-      color: 'var(--text-300)',
-    };
+    if (tabId === 'overdue') return 'secondary';
+    if (tabId === 'critical') return 'destructive';
+    return 'secondary';
   };
 
   return (
@@ -99,24 +54,33 @@ export function QueueTabs({ activeTab, onTabChange, tickets, currentAgentId }: Q
         borderBottom: '1px solid var(--border-default)',
       }}
     >
-      {tabs.map((tab) => (
-        <button
-          key={tab.id}
-          onClick={() => onTabChange(tab.id)}
-          className={`queue-tab flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-all duration-200 border border-transparent ${
-            tab.id === 'critical' ? 'queue-tab-critical' : ''
-          } ${tab.id === 'overdue' ? 'queue-tab-overdue' : ''} ${activeTab === tab.id ? 'active' : ''}`}
-          style={getTabStyle(tab.id, activeTab === tab.id)}
-        >
-          {tab.label}
-          <span
-            className="inline-flex items-center justify-center min-w-[20px] px-1.5 py-0.5 text-xs font-semibold rounded-full"
-            style={getCountStyle(tab.id, activeTab === tab.id)}
-          >
-            {tab.count}
-          </span>
-        </button>
-      ))}
+      <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
+        <TabsList className="bg-transparent gap-1">
+          {tabs.map((tab) => (
+            <TabsTrigger
+              key={tab.id}
+              value={tab.id}
+              className="flex items-center gap-2 px-4 py-2 data-[state=active]:bg-[var(--accent-primary-muted)] data-[state=active]:text-[var(--accent-primary-text)]"
+              style={{
+                background: activeTab === tab.id && tab.id === 'overdue'
+                  ? 'var(--accent-secondary-muted)'
+                  : undefined,
+                color: activeTab === tab.id && tab.id === 'overdue'
+                  ? 'var(--accent-secondary)'
+                  : undefined,
+              }}
+            >
+              {tab.label}
+              <Badge
+                variant={getBadgeVariant(tab.id, activeTab === tab.id)}
+                className="ml-1"
+              >
+                {tab.count}
+              </Badge>
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </Tabs>
     </div>
   );
 }

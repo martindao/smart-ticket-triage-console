@@ -5,6 +5,13 @@ import { StatusBadge } from './StatusBadge';
 import { AgentAvatar } from './AgentAvatar';
 import { SLABadge } from './SLABadge';
 import { NoteItem } from './NoteItem';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import {
   User,
   ArrowUpRight,
@@ -136,42 +143,34 @@ export function TicketDetail({
           </div>
         </div>
 
-        {/* Action buttons - workflow-first layout */}
-        <div className="flex items-center gap-2 flex-wrap">
-          {canAssign && (
-            <div className="relative group">
-              <button
-                className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-md transition-colors"
-                style={{
-                  background: 'var(--surface-700)',
-                  color: 'var(--text-200)',
-                  border: '1px solid var(--border-default)',
-                }}
+      {/* Action buttons - workflow-first layout */}
+      <div className="flex items-center gap-2 flex-wrap">
+        {canAssign && (
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2"
               >
                 <User className="w-3.5 h-3.5" />
                 Assign
-              </button>
-              <div
-                className="absolute left-0 top-full mt-1 w-44 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-20"
-                style={{
-                  background: 'var(--surface-700)',
-                  border: '1px solid var(--border-default)',
-                }}
-              >
-                {agents.map((agent) => (
-        <button
-          key={agent.id}
-          onClick={() => onAssign(ticket.id, agent.id)}
-          className="agent-dropdown-item w-full flex items-center gap-2 px-3 py-2 text-xs text-left transition-colors first:rounded-t-lg last:rounded-b-lg"
-          style={{ color: 'var(--text-200)' }}
-        >
-                    <AgentAvatar agent={agent} size="sm" />
-                    <span>{agent.name}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              {agents.map((agent) => (
+                <DropdownMenuItem
+                  key={agent.id}
+                  onClick={() => onAssign(ticket.id, agent.id)}
+                  className="gap-2"
+                >
+                  <AgentAvatar agent={agent} size="sm" />
+                  <span>{agent.name}</span>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
           {canEscalate && (
             <button
               onClick={() => onEscalate(ticket.id)}

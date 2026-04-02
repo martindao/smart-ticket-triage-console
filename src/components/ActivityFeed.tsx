@@ -7,6 +7,10 @@ import {
   XCircle,
 } from 'lucide-react';
 import type { Activity } from '../types/ticket';
+import { Card, CardContent } from '@/components/ui/card';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Separator } from '@/components/ui/separator';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface ActivityFeedProps {
   activities: Activity[];
@@ -55,43 +59,75 @@ function getRelativeTime(timestamp: string): string {
 }
 
 export function ActivityFeed({ activities }: ActivityFeedProps) {
+  if (activities.length === 0) {
+    return (
+      <Card>
+        <CardContent className="p-6 text-center" style={{ color: 'var(--text-400)' }}>
+          <p>No recent activity</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
-    <div className="activity-feed">
-      <div>
-        {activities.length === 0 ? (
-          <div className="p-6 text-center" style={{ color: 'var(--text-400)' }}>
-            <p>No recent activity</p>
-          </div>
-        ) : (
-          activities.slice(0, 10).map((activity) => {
+    <Card>
+      <ScrollArea className="h-[400px]">
+        <div className="space-y-1">
+          {activities.slice(0, 10).map((activity, index) => {
             const Icon = activityIcons[activity.type];
             const bgColor = activityColors[activity.type];
             const iconColor = activityIconColors[activity.type];
 
             return (
-              <div key={activity.id} className="activity-item">
-                <div className="flex gap-3">
+              <div key={activity.id}>
+                <div className="flex gap-3 p-3">
                   <div
-                    className="activity-icon-wrap"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
                     style={{ background: bgColor }}
                   >
                     <Icon className="w-4 h-4" style={{ color: iconColor }} />
                   </div>
-                  <div className="activity-content">
-                    <p className="text-sm">
-                      <span className="activity-agent">{activity.agent.name}</span>{' '}
-                      <span className="activity-action">{activity.description}</span>
-                    </p>
-                    <p className="activity-time">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <Avatar className="w-5 h-5">
+                        <AvatarFallback
+                          className="text-[10px]"
+                          style={{
+                            background: 'var(--surface-600)',
+                            color: 'var(--text-300)',
+                          }}
+                        >
+                          {activity.agent.name
+                            .split(' ')
+                            .map((n) => n[0])
+                            .join('')}
+                        </AvatarFallback>
+                      </Avatar>
+                      <p className="text-sm" style={{ color: 'var(--text-200)' }}>
+                        <span className="font-medium" style={{ color: 'var(--text-100)' }}>
+                          {activity.agent.name}
+                        </span>{' '}
+                        <span style={{ color: 'var(--text-400)' }}>
+                          {activity.description}
+                        </span>
+                      </p>
+                    </div>
+                    <p
+                      className="text-xs mt-1"
+                      style={{ color: 'var(--text-500)' }}
+                    >
                       {getRelativeTime(activity.timestamp)}
                     </p>
                   </div>
                 </div>
+                {index < Math.min(activities.length, 10) - 1 && (
+                  <Separator className="mx-3" />
+                )}
               </div>
             );
-          })
-        )}
-      </div>
-    </div>
+          })}
+        </div>
+      </ScrollArea>
+    </Card>
   );
 }

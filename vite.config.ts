@@ -9,6 +9,7 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  base: '/projects/smart-ticket/demo/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

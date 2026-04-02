@@ -4,6 +4,8 @@ import { StatusBadge } from './StatusBadge';
 import { AgentAvatar } from './AgentAvatar';
 import { SLABadge } from './SLABadge';
 import { Tag, GripVertical } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 interface TicketCardProps {
   ticket: Ticket;
@@ -18,85 +20,107 @@ export function TicketCard({ ticket, isSelected, onClick, compact: _compact }: T
     day: 'numeric',
   });
 
-  // Determine if critical for special styling
   const isCritical = ticket.priority === 'Critical';
   const isOverdue = new Date(ticket.slaDeadline) < new Date();
 
-  // Determine card state class
-  const getCardClassName = () => {
-    let classes = 'group relative px-3 py-2.5 cursor-pointer transition-all duration-150';
+  // Determine card styling based on state
+  const getCardStyle = (): React.CSSProperties => {
     if (isSelected) {
-      classes += ' ticket-card-selected';
-    } else if (isOverdue) {
-      classes += ' ticket-card-overdue';
-    } else if (isCritical) {
-      classes += ' ticket-card-critical';
-    } else {
-      classes += ' bg-[var(--surface-800)] hover:bg-[var(--surface-750)]';
+      return {
+        background: 'var(--accent-primary-muted)',
+        border: '2px solid var(--accent-primary)',
+        boxShadow: '0 0 0 1px var(--accent-primary), 0 4px 12px rgba(16, 185, 129, 0.15)',
+      };
     }
-    return classes;
+    if (isOverdue) {
+      return {
+        background: 'var(--accent-secondary-muted)',
+        border: '1px solid var(--accent-secondary)',
+      };
+    }
+    if (isCritical) {
+      return {
+        background: 'var(--semantic-critical-muted)',
+        border: '1px solid var(--semantic-critical)',
+      };
+    }
+    return {
+      background: 'var(--surface-800)',
+      border: '1px solid var(--border-subtle)',
+    };
   };
 
   return (
-    <div
+    <Card
       onClick={onClick}
-      className={getCardClassName()}
+      className={`group relative cursor-pointer transition-all duration-150 ${
+        isSelected ? 'ring-2 ring-[var(--accent-primary)]' : 'hover:shadow-md'
+      }`}
       style={{
+        ...getCardStyle(),
         borderBottom: '1px solid var(--border-subtle)',
       }}
     >
-
-      {/* Drag handle hint on hover */}
-      <div
-        className="absolute left-0 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-40 transition-opacity"
-        style={{ marginLeft: '4px' }}
-      >
-        <GripVertical className="w-3 h-3 text-[var(--text-400)]" />
-      </div>
-
-      {/* Header row: ID + Priority + Avatar */}
-      <div className="flex items-center gap-2 mb-1.5">
-        <span
-          className="text-[11px] font-mono tracking-wide"
-          style={{ color: isSelected ? 'var(--accent-primary-text)' : 'var(--text-500)' }}
+      <CardContent className="px-3 py-2.5">
+        {/* Drag handle hint on hover */}
+        <div
+          className="absolute left-0 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-40 transition-opacity"
+          style={{ marginLeft: '4px' }}
         >
-          {ticket.id}
-        </span>
-        <PriorityBadge priority={ticket.priority} />
-        <div className="flex-1" />
-        <AgentAvatar agent={ticket.assignee} size="sm" />
-      </div>
-
-      {/* Title */}
-      <h3 className="ticket-title line-clamp-2 mb-2">
-        {ticket.title}
-      </h3>
-
-      {/* Footer row: Status + SLA + Date */}
-      <div className="flex items-center gap-2">
-        <StatusBadge status={ticket.status} />
-        <SLABadge deadline={ticket.slaDeadline} />
-        <div className="flex-1" />
-        <span className="text-[11px] text-[var(--text-500)]">{createdDate}</span>
-      </div>
-
-      {/* Tags - compact inline */}
-      {ticket.tags.length > 0 && (
-        <div className="flex items-center gap-1.5 mt-2 pt-2" style={{ borderTop: '1px solid var(--border-subtle)' }}>
-          <Tag className="w-3 h-3 text-[var(--text-500)]" />
-          {ticket.tags.slice(0, 3).map((tag) => (
-            <span
-              key={tag}
-              className="text-[11px] text-[var(--text-400)] bg-[var(--surface-600)] px-1.5 py-0.5 rounded"
-            >
-              {tag}
-            </span>
-          ))}
-          {ticket.tags.length > 3 && (
-            <span className="text-[11px] text-[var(--text-500)]">+{ticket.tags.length - 3}</span>
-          )}
+          <GripVertical className="w-3 h-3" style={{ color: 'var(--text-400)' }} />
         </div>
-      )}
-    </div>
+
+        {/* Header row: ID + Priority + Avatar */}
+        <div className="flex items-center gap-2 mb-1.5">
+          <span
+            className="text-[11px] font-mono tracking-wide"
+            style={{ color: isSelected ? 'var(--accent-primary-text)' : 'var(--text-500)' }}
+          >
+            {ticket.id}
+          </span>
+          <PriorityBadge priority={ticket.priority} />
+          <div className="flex-1" />
+          <AgentAvatar agent={ticket.assignee} size="sm" />
+        </div>
+
+        {/* Title */}
+        <h3
+          className="line-clamp-2 mb-2 text-sm font-medium"
+          style={{ color: isSelected ? 'var(--accent-primary-text)' : 'var(--text-100)' }}
+        >
+          {ticket.title}
+        </h3>
+
+        {/* Footer row: Status + SLA + Date */}
+        <div className="flex items-center gap-2">
+          <StatusBadge status={ticket.status} />
+          <SLABadge deadline={ticket.slaDeadline} />
+          <div className="flex-1" />
+          <Badge variant="outline" className="text-[11px]">
+            {createdDate}
+          </Badge>
+        </div>
+
+        {/* Tags - compact inline */}
+        {ticket.tags.length > 0 && (
+          <div
+            className="flex items-center gap-1.5 mt-2 pt-2"
+            style={{ borderTop: '1px solid var(--border-subtle)' }}
+          >
+            <Tag className="w-3 h-3" style={{ color: 'var(--text-500)' }} />
+            {ticket.tags.slice(0, 3).map((tag) => (
+              <Badge key={tag} variant="secondary" className="text-[11px]">
+                {tag}
+              </Badge>
+            ))}
+            {ticket.tags.length > 3 && (
+              <span className="text-[11px]" style={{ color: 'var(--text-500)' }}>
+                +{ticket.tags.length - 3}
+              </span>
+            )}
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }
