@@ -47,23 +47,6 @@ The current UI focuses on the parts of a support console that matter during live
 - SLA visibility, escalation context, and RCA notes where a support rep actually needs them
 - dashboard previews that still route back into active ticket work
 
-## Screenshots
-
-Current captures from the live remake are saved under `docs/screenshots/`.
-
-| Dashboard | Queue | Ticket Detail |
-|-----------|-------|---------------|
-| ![Dashboard view](docs/screenshots/dashboard.png) | ![Queue view](docs/screenshots/queue.png) | ![Ticket detail view](docs/screenshots/detail.png) |
-
-## Source inspiration disclosure
-
-This portfolio rebuild is visually and structurally inspired by two open-source helpdesk products:
-
-- **[Peppermint](https://github.com/Peppermint-Lab/peppermint)** — queue density, left-nav app framing, split layout, practical ticket operations
-- **[Frappe Helpdesk](https://github.com/frappe/helpdesk)** — service-desk tone, dashboard card summaries, SLA/status visibility, support context in the detail view
-
-This is an original React implementation built for portfolio review. The goal is to study real support product patterns and recreate that workflow in a smaller standalone app. No source code was copied from those projects.
-
 ## Support relevance
 
 This repo is meant to show work that maps directly to application support and production triage responsibilities.
